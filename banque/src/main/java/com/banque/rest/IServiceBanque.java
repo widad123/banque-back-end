@@ -11,4 +11,6 @@ public interface IServiceBanque {
     public CompteEntity[] selectCompte(Integer unUtilisateurId) throws Exception;
 
     public OperationEntity[] selectOperation(Integer unUtilisateurId, Integer unCompteId, Date dateDeb, Date dateFin, Boolean creditDebit) throws Exception;
+    
+    public OperationEntity[] doVirement(Integer unUtilisateurId,Integer unCompteIdSrc,Integer unCompteIdDst,Double unMontant) throws Exception;
 }

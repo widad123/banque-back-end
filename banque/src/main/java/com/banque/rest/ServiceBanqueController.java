@@ -7,10 +7,13 @@ import com.banque.entity.OperationEntity;
 import com.banque.service.IAuthentificationService;
 import com.banque.service.ICompteService;
 import com.banque.service.IOperationService;
+
+
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,8 +58,8 @@ public class ServiceBanqueController {
     public OperationEntity[] selectOperation(
         @RequestParam("unUtilisateurId") Integer unUtilisateurId,
         @RequestParam("unCompteId") Integer unCompteId,
-        @RequestParam("dateDeb") Date dateDeb,
-        @RequestParam("dateFin") Date dateFin,
+        @RequestParam("dateDeb") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'") Date dateDeb,
+        @RequestParam("dateFin") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'") Date dateFin,
         @RequestParam("creditDebit") Boolean creditDebit
     ) throws Exception {
         // Logique de sélection des opérations
@@ -64,4 +67,25 @@ public class ServiceBanqueController {
         List<IOperationEntity> operations = serviceOperation.selectCritere(unUtilisateurId, unCompteId, dateDeb, dateFin, creditDebit, !creditDebit);
         return operations.toArray(new OperationEntity[0]);
     }
+    
+    @PostMapping("/doVirement")
+    public OperationEntity[] doVirement(
+        @RequestParam("unUtilisateurId") Integer unUtilisateurId,
+        @RequestParam("unCompteIdSrc") Integer unCompteIdSrc,
+        @RequestParam("unCompteIdDst") Integer unCompteIdDst,
+        @RequestParam("unMontant") Double unMontant
+    ) throws Exception {
+        // ...
+        List<IOperationEntity> operations = serviceOperation.faireVirement(unUtilisateurId,unCompteIdSrc,unCompteIdDst,unMontant);
+        return operations.toArray(new OperationEntity[0]);
+    }
+    
+    @PostMapping("/allOperations")
+    public OperationEntity[]  selectAll(
+    		 @RequestParam("unUtilisateurId") Integer unUtilisateurId,
+    	     @RequestParam("unCompteId") Integer unCompteId
+    	     )throws Exception{
+    	List<IOperationEntity> operations = serviceOperation.selectAll(unUtilisateurId,unCompteId);
+        return operations.toArray(new OperationEntity[0]);
+    } 
 }
